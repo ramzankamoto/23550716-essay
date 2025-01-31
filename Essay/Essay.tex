@@ -1,0 +1,476 @@
+\documentclass[preprint, 3p,
+authoryear]{elsarticle} %review=doublespace preprint=single 5p=2 column
+%%% Begin My package additions %%%%%%%%%%%%%%%%%%%
+
+\usepackage[hyphens]{url}
+
+
+\usepackage{graphicx}
+%%%%%%%%%%%%%%%% end my additions to header
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+% TODO: Currently lineno needs to be loaded after amsmath because of conflict
+% https://github.com/latex-lineno/lineno/issues/5
+\usepackage{lineno} % add
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \usepackage{fontspec}
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage[]{natbib}
+\bibliographystyle{elsarticle-harv}
+
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Risk Parity Portfolio Construction for South Africa},
+            colorlinks=false,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+
+\setcounter{secnumdepth}{5}
+% Pandoc toggle for numbering sections (defaults to be off)
+
+
+% tightlist command for lists without linebreak
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{geometry}
+\geometry{a4paper, textwidth=6in}
+\renewcommand{\normalsize}{\fontsize{11pt}{13pt}\selectfont}
+\justifying
+\parskip=6pt
+\makeatletter
+\def\@journal{ }
+\makeatother
+
+
+
+
+\begin{document}
+
+
+\begin{frontmatter}
+
+  \title{Risk Parity Portfolio Construction for South Africa}
+    \author[Stellenbosch University]{Ramzan Kamoto%
+  \corref{cor1}%
+  \fnref{1}}
+   \ead{23550716@sun.ac.za} 
+    \author[Stellenbosch University]{Nico Katzke%
+  %
+  }
+   \ead{nfkatzke@gmail.com} 
+      \affiliation[Stellenbosch University]{
+    organization={Stellenbosch Economics
+Department},addressline={Schumann Building, Bosman
+Street},city={Stellenbosch},postcode={7600},state={Western
+Cape},country={South Africa},}
+    \cortext[cor1]{Corresponding author}
+    \fntext[1]{Ramzan is a master's degree student at Stellenbosch
+University. This project is in partial fulfillment of the Financial
+Econometrics module.}
+    \fntext[2]{Nico Katzke is the Head of Portfolios at Satrix and
+part-time lecturer for Financial Econometrics and Financial Economics at
+Stellenbosch University.}
+  
+  \begin{abstract}
+  Dummy abstract: This study examines the effectiveness of risk parity
+  portfolio construction in the South African equity market, using data
+  from the FTSE/JSE Top 40 index from 2010 to 2024. A conceptual
+  replication of the vanilla risk parity framework is conducted and
+  applied to South Africa, comparing RP portfolios against the tangency
+  portfolio in terms of allocation stability, risk distribution, and
+  return performance. The results indicate that risk parity portfolios
+  provide greater risk diversification and allocation stability, making
+  them resilient in volatile markets. However, they may underperform in
+  strong bull markets where high-risk assets generate outsized returns.
+  \end{abstract}
+    \begin{keyword}
+    Risk Parity Portfolio \sep 
+    Portfolio Optimization
+  \end{keyword}
+  
+ \end{frontmatter}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Portfolio optimization remains a fundamental challenge in financial
+management, as investors seek to allocate capital efficiently across
+different assets to balance risk and return. Traditional models, such as
+Markowitz's (1952) mean-variance optimization (MVO) and the Capital
+Asset Pricing Model (CAPM), have played a crucial role in shaping
+investment strategies. However, these approaches heavily rely on
+expected returns, which are notoriously difficult to estimate accurately
+and are prone to instability.
+
+Risk parity (RP), also known as equal risk contribution (ERC), has
+emerged as an alternative approach to portfolio construction,
+emphasizing the allocation of risk rather than capital. Unlike MVO,
+which optimizes return for a given level of risk, RP portfolios ensure
+that each asset contributes equally to overall portfolio risk. This
+strategy gained popularity soon after the global financial crisis as
+traditional methods of asset pricing faced scrutiny. The popularity grew
+after \citet{maillard2010} showed that constructing portfolios with
+equal risk contribution in mind led to better diversification outcomes
+regardless of expected returns.
+
+The objective of this paper is to examine the effectiveness of risk
+parity portfolio construction in the South African equity market.
+Specifically, we compare risk parity portfolios with the traditional
+maximum Sharpe ratio (tangency) portfolio using a dataset of the
+FTSE/JSE Top 40 companies from 2010 to 2024. By conducting a conceptual
+replication of Tharis Souza's (2019) study on risk parity for FAANG
+stocks, we assess whether risk parity offers superior risk-adjusted
+returns and portfolio stability in an emerging market context. Through a
+series of empirical tests, we evaluate the allocation dynamics, risk
+stability, and return performance of RP portfolios against their
+tangency counterparts.
+
+\hypertarget{literature-review}{%
+\section{Literature Review}\label{literature-review}}
+
+\hypertarget{historical-evolution-of-portfolio-theory}{%
+\subsection{Historical Evolution of Portfolio
+Theory}\label{historical-evolution-of-portfolio-theory}}
+
+The foundation of modern portfolio theory can be traced to
+\citet{HM1952} work on mean variance optimization, which introduced the
+concept of balancing expected returns against risk. The core concept of
+MVO is to maximise expected return for a given level of risk, measured
+by variance, by strategically allocating investments across different
+assets to achieve the best possible risk-return trade-off for an
+investor based on their risk tolerance \citep{panulo2014}. Although MVO
+remains a powerful tool that is applied widely, it's practical
+implementation has been criticised for its heavy reliance on expected
+return estimates, which are prone to estimation errors and instability
+\citep{best1991}.
+
+Building on Markowitz's work, the Capital Asset Pricing Model,
+introduced by \citet{sharpe1964} and \citet{mossin1966}, provided
+further insight into asset pricing by linking expected returns to
+systematic risk. While CAPM remains a cornerstone of financial theory,
+its assumptions about market efficiency and normally distributed returns
+have also been challenged.
+
+The 2008 global financial crisis marked an important turning point that
+led to many scholars and practitioners to strongly criticise traditional
+risk-gain models, consequently, leading to wide scale adoption of a
+different kind of portfolio selection strategy, one based on risk
+allocation \citep{ararat2024}. One way to deal with the problems of MVO
+is to use equal weighted portfolios (EW), where capital is distributed
+evenly across assets. However, if the assets in the investment universe
+have different instrinsic risk then the equal weighted portfolio does
+not achieve total risk diversification \citep{ararat2024}.
+
+\hypertarget{toward-risk-parity}{%
+\subsection{Toward Risk Parity}\label{toward-risk-parity}}
+
+A more prudent way of addressing risk is therefore risk parity, also
+called equal risk contribution. A risk parity portfolio is constructed
+to ensure that each asset contributes equally to the total risk of the
+portfolio. Unlike EW portfolios, which allocates the same amount of
+capital to each asset regardless of risk, RP adjusts asset weights based
+on their individual volatility and correlation with other assets. This
+ensures that no single asset dominates portfolio risk, leading to
+improved diversification \citep{maillard2010}.
+
+Mathematically, a risk parity portfolio is defined by solving the
+following optimization problem:
+
+\[
+w_i\sigma_i = wj\sigma_j, \forall_{i,j}
+\]
+
+Where \(w_i\) represents the weight of asset I and \(\sigma_i\) is its
+standard deviation. This framework ensures that assets with higher risk
+receive lower weight, while lower risk assets are are allocated
+proportionally more capital, creating a balanced risk structure across
+the portfolio. Many methods exist when creating risk parity portfolios
+\citep{feng2015}. Traditionally, the formulation of risk parity is a
+least squares optimization problem, where the risk contribution of each
+asset is compared to another assets risk contribution. The model thus
+compares each asset with every other asset and reach an objective value
+of 0 indicating that all risk contributions are the same
+\citep{gambeta2020}.
+
+The appeal of risk parity lies in its ability to distribute risk more
+evenly across portfolio constituents, reducing reliance on fragile
+return forecasts. However, this advantage is not without its theoretical
+and empirical challenges. The assumption that equal risk contribution
+leads to optimal diversification has been contested, particularly in
+extreme market conditions. Traditional risk parity models rely on
+volatility as a risk measure, which fails to capture asymmetries and
+fat-tailed distributions present in financial markets \citep{braga2023}.
+The increased research in extensions of ERC such as kurtosis-based risk
+parity reflects a growing awareness that standard deviation alone may be
+insufficient for portfolio optimization.
+
+\citet{costa2019} argue that risk parity portfolios perform
+inconsistently across market regimes, particularly during high
+volatility periods. Their research introduces a Markov regime-switching
+framework to address the instability in asset volatilities and
+correlations. This approach suggests that the risk contributions of
+assets should be dynamically adjusted based on the market state rather
+than assuming static risk exposures. Such enhancements present a
+compelling case for incorporating dynamic risk parity strategies that
+react to macroeconomic conditions and shifts in risk premia. Another
+concern is the over-concentatration of risk parity portfolios in low
+volatility assets, particularly fixed income securities. Risk parity
+portfolios seem to work well when interest rates are declining but
+presents substantial risk when interest rates rise. \citet{panulo2014}
+highlights the vulnerability of leveraged risk parity portfolios to
+funding constraints, as liquidity dries up during financial crises. The
+necessity for leverage in risk parity to maintain competitive returns
+adds another layer of risk, raising questions about its suitability for
+all investors.
+
+Alternative portfolio construction methods provide contrasting views on
+achieving diversification and risk control. MVO, despite its well
+documented estimation errors, remains the theoretical benchmark for
+efficient portfolio construction. With the advancements in machine
+learning and Bayesian estimation techniques, some argue that return
+forecasting has improved enough to mitigate drawbacks of MVO. Meanwhile,
+hierarchical risk parity (HRP) has emerged as a more sophisticated
+refinement of traditional risk parity \citep{nico2019}. It involves
+clustering assets based on their correlation structures rather than
+assuming homogeneity in risk contribution \citep{palit2024}. These
+innovations demonstrate that risk parity, while valuable, is not
+necessarily the optimal solution in all market conditions.
+
+The ongoing debate between risk parity and alternative allocation
+strategies underscores a broader dilemma in portfolio theory: should
+investors prioritize robustness over theoretical efficiency? While risk
+parity minimizes reliance on unreliable return estimates, it does not
+eliminate estimation risk entirely. Volatility estimates and correlation
+structures are equally prone to regime shifts and model instability. By
+integrating higher order risk measures such as skewness and kurtosis,
+researchers aim to refine risk parity's effectiveness in extreme market
+conditions \citep{braga2023}. Future research should further explore
+dynamic risk parity models that adjust allocation strategies in real
+time based on changing market conditions. Factor-based risk parity,
+which incorporates macroeconomic variables into the allocation process,
+may also provide a more adaptive framework for portfolio construction.
+Combining machine learning and risk parity has also proved to be useful,
+as algorithmic techniques can enhance estimation stability and improve
+responsiveness to financial shocks. Ultimately, risk parity remains an
+essential strategy in portfolio construction. For the remainder of this
+essay, I will advocate for risk parity portfolios using South African
+equity data.
+
+\hypertarget{data}{%
+\section{Data}\label{data}}
+
+In this paper, we explore whether a risk parity portfolio is more
+efficient than maximum sharpe ratio or tangency portfolio in South
+Africa. we conduct a conceptual replication of Tharis Souza's 2019
+article,
+``\textit{DIY Ray Dalio ETF: How to build your own Hedge Fund strategy with risk parity portfolios}'',
+where he showed how to build a risk parity portfolio for FAANG
+companies. In this paper, we follow the same principles, using the data
+from the FTSE/JSE Top 40 Companies (J200) from January 2010 to June
+2024. The data is available through Bloomberg. In order to stick close
+to the article by Souza, which used 5 top companies in the USA, we
+subset the number of equities by taking the top ten tickers on the last
+date of the dataset. The portfolios are then constructed from the
+universe of the following tickers: AGL, BTI, CFR, CPI, FSR, GFI, MTN,
+NPN, PRX and SBK. Table one shows the descriptive statistics for these
+tickers.
+
+\hypertarget{methodology}{%
+\section{Methodology}\label{methodology}}
+
+For the purposes of this replication we use the J200 dataset to
+construct a risk parity portfolio and a tangency portfolio. First, we
+verify whether the risk parity portfolio is well specified, by plotting
+the risk contribution and weight distribution of each asset. If the risk
+contributions are all equal then the portfolio is well specified. Next
+we compare the weight allocation of both portfolios to assess the weight
+distribution among constituents. Thirdly, in order to determine the
+stability of risk parity portfolios, we construct a rolling risk parity
+portfolio and plot a stacked barchart of quarterly rebalanced weights.
+Finally, the cumulative returns, daily returns and drawdowns are also
+assessed and compared with performance from other portfolios in the
+literature.
+
+\hypertarget{rp-construction}{%
+\subsection{RP Construction}\label{rp-construction}}
+
+Let the marginal risk contribution of asset \(i\) be given by:
+
+\[ 
+\frac{\partial\sigma_{p}}{\partial{w}_{i}} = \frac{(\Sigma{w})_i}{\sigma_p}
+\] Multiplying by \(w_i\) gives the total risk contribution (RC) :
+
+\[
+RC_i = w_i \frac{(\Sigma w)_i}{\sigma_p}
+\] Since the total risk portfolio is:
+
+\[
+\sigma_p = \sqrt{w^\top \Sigma w},
+\] the risk contribution simplifies to:
+
+\[
+RC_i = w_i (\Sigma w)_i.
+\] In a risk parity portfolio, all assets contribute equally to risk,
+this means :
+
+\[
+w_i (\Sigma w)_i = w_j (\Sigma w)_j, \quad \forall i, j.
+\] Since this must hold for all pairs, we rewrite it as:
+
+\[
+w_i (\Sigma w)_i - w_j (\Sigma w)_j = 0, \quad \forall i, j,
+\] This forms a homogenous system of equations and can be formulated as
+a least squares objective problem as below
+
+\[
+\min_w \sum_{i=1}^n\sum_{j=1}^n \left( w_i (\Sigma w)_i - w_j (\Sigma w)_j \right)^2.\\
+\] \[s.t \space \space \mathbf{1}^Tw= 1 \\\]
+
+\[w \geq 0\]
+
+The model will compare risk contribution of each asset with every other
+asset and reach an objective value of 0 indicating all risk
+contributions are the same.
+
+\hypertarget{max-sharpe-ratio-construction}{%
+\subsection{Max Sharpe Ratio
+Construction}\label{max-sharpe-ratio-construction}}
+
+The tangency portfolio maximizes the Sharpe ratio defined as:
+
+\[
+S(w) = \frac{w^\top\mu-r_f}{\sqrt{w^\top\Sigma{w}}}
+\]
+
+Where \(\mu\) is the vector of expected asset returns and \(r_f\) is the
+risk free rate.
+
+Since the Sharpe ratio is scale invariant, we solve the following
+unconstrained optimization problem:
+
+\[
+\max_w \frac{w^\top (\mu - r_f \mathbf{1})}{\sqrt{w^\top \Sigma w}}.
+\] Using Lagrangian optimization, the optimal tangency portfolio weights
+before normalization are:
+
+\[
+w^* = \Sigma^{-1} (\mu - r_f \mathbf{1}).
+\] To ensure that the portfolio is fully invested
+\(w^\top \mathbf{1} = 1\), we normalize:
+
+\[
+w^* = \frac{\Sigma^{-1} (\mu - r_f \mathbf{1})}{\mathbf{1}^\top \Sigma^{-1} (\mu - r_f \mathbf{1})}.
+\] This results in the tangency portfolio that leads to the highest
+Sharpe ratio.
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+The empirical results highlight several important findings regarding
+risk parity portfolio performance in South Africa. First, the risk
+contribution analysis confirms that the RP portfolio is well-specified,
+with risk contributions distributed evenly across assets. This stands in
+contrast to the maximum Sharpe ratio portfolio, where risk is
+concentrated in a few high risk, high reward stocks.
+
+Second, our weight distribution analysis reveals that risk parity
+portfolios favor low-volatility assets more than the tangency portfolio,
+which assigns disproportionate weights to assets with higher expected
+returns. This finding aligns with existing literature, where RP
+strategies tend to overweight assets with lower volatility. Moreover,
+the rolling risk parity allocation over different time periods suggests
+that RP portfolios maintain a relatively stable allocation structure,
+whereas tangency portfolios would have exhibitted significant variation
+in weight distributions due to changing return expectations. This
+stability is particularly valuable in volatile market conditions, as it
+minimizes exposure.
+
+However, RP portfolios are not without their challenges. One notable
+drawback is their tendency to underperform during strong bull markets,
+where high-risk assets generate excess returns that RP portfolios do not
+fully capture due to their focus on risk allocation rather than return
+maximization. Additionally, the dependence of risk parity on volatility
+estimates means that periods of sharp volatility shifts, such as during
+financial crises, may lead to suboptimal allocations if not adjusted.
+
+Finally, the literature shows that a risk parity portfolio would likely
+be somewhere between an equal weight and mean variance portfolios
+\citep{gambeta2020}. From this we can infer that the risk parity
+portfolio would likely have higher cumulative returns and shallower
+drawdowns than the tangency portfolio. This strengthens the argument for
+their application in emerging market economies. To stress test this
+portfolio structure further, it could have been useful to test other
+packages on the same data as well as introduce a wider range of assets
+to the investable universe. This would allow a thorough analysis of how
+risk parity portfolios diversify across sectors, asset classes and
+regulatory or macroeconomic contraints.
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+The empirical analysis shows that RP portfolios provide superior
+diversification by ensuring an equal distribution of risk across assets,
+reducing concentration in high-risk stocks, and maintaining allocation
+stability over time. Given these findings, a dynamic risk parity
+approach, which adjusts allocations based on changing market conditions,
+such as a markov regime switching risk parity portfolio, may further
+enhance performance. Incorporating factors such as macro-driven risk
+assessments or machine learning techniques could improve risk parity's
+adaptability to different market environments.
+
+Future research should explore how hierarchical risk parity (HRP), which
+clusters assets based on correlation structures, compares with
+traditional RP in South African financial markets. Additionally,
+integrating alternative risk measures, such as skewness and kurtosis,
+may refine portfolio construction to better address tail-risk events.
+Furthermore, incorporating different asset classes would illuminate how
+risk parity construction diversifies across sectors and asset classes.
+
+Ultimately, while risk parity does not necessarily outperform in all
+market conditions, it remains a valuable tool for investors seeking
+stability, diversification, and reduced dependence on unreliable return
+forecasts. Its effectiveness in the South African context underscores
+the need for risk-based allocation strategies in emerging markets, where
+structural volatility and market inefficiencies pose unique challenges
+to traditional investment models.
+
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+\newpage
+
+\renewcommand\refname{References}
+\bibliography{mybibfile.bib}
+
+
+\end{document}
