@@ -22,13 +22,13 @@ from fmxdat. In the Palomar vignette, they use FAANG companies to
 illustrate risk parity construction. Similarly, I take the top 10
 tickers on the last date and use those for the rest of my analysis.
 
-Some things I was able to do well and others I. First, I was able to get
-nice plots showing the weight and risk contribution under risk parity
-portfolio conditions. I was also able to compare risk parity and
-tangency portfolio weights side by side. constructing the tangency
+Some things I was able to do well and others I struggled. First, I was
+able to get nice plots showing the weight and risk contribution under
+risk parity portfolio conditions. I was also able to compare risk parity
+and tangency portfolio weights side by side. constructing the tangency
 portfolio proved difficult. I initially tried to follow the Palomar
 vignette but my portfolio failed to optimize. Then, I opted for CVXR
-whoch worked but then i struggled to get the rolling weights stacked bar
+which worked but then I struggled to get the rolling weights stacked bar
 chart. In the end I abandoned the tangency portfolio at this stage. In
 the essay, I discuss based on what I have seen in the literature but not
 with a plot of my own.
