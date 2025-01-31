@@ -40,6 +40,11 @@ function to load data started to produce an error (Error in
 `>.default`(date, start_date) : comparison (\>) is possible only for
 atomic and list types)
 
+I tried stack and google, some suggestions were that it is because of
+lubridates date function being confused but I am not sure. It could just
+be my machine. Please do review the code and the plots that are
+unfortunately missing from my essay.
+
 ## Initializing
 
 ``` r
