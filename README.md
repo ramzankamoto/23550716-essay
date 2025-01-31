@@ -42,8 +42,9 @@ atomic and list types)
 
 I tried stack and google, some suggestions were that it is because of
 lubridates date function being confused but I am not sure. It could just
-be my machine. Please do review the code and the plots that are
-unfortunately missing from my essay.
+be my machine, a few days ago i had the same issue and it worked again
+on its own without any debugging. Please do review the code and the
+plots that are unfortunately missing from my essay.
 
 ## Initializing
 
